@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 import tempfile
 import warnings
 from pathlib import Path
@@ -15,6 +16,7 @@ from gradio import processing_utils, utils, wasm_utils
 from gradio.components.base import Component
 from gradio.data_classes import FileData, GradioModel
 from gradio.events import Events
+from gradio.utils import get_base_file_name
 
 if not wasm_utils.IS_WASM:
     # TODO: Support ffmpeg on Wasm
@@ -250,7 +252,8 @@ class Video(Component):
         if video is None:
             return None
         video = str(video)
-        returned_format = video.split(".")[-1].lower()
+        file_name = get_base_file_name(video)
+        returned_format = os.path.splitext(file_name)[-1].lstrip(".")
         if self.format is None or returned_format == self.format:
             conversion_needed = False
         else:

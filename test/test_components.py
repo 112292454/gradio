@@ -1516,6 +1516,43 @@ class TestVideo:
         assert ".avi" in list(output_params.keys())[0]
         assert ".avi" in output_file
 
+    def test_upload_file_types(self):
+        from gradio.utils import get_base_file_name
+
+        urls = {
+            "https://www.example.com/images/photo.jpg": "photo.jpg",
+            "https://www.subdomain.example.com/files/image.png": "image.png",
+            "https://www.subdomain.example.com/folder/photos/photo1.jpg": "photo1.jpg",
+            "https://www.example.com/files/course_materials/document.zip": "document.zip",
+            "https://www.example.com/images/special/image&!#.jpg/": "image&!",  # ?
+            "https://www.example.com/files/my#file.docx/": "my",
+            "http://www.example.com/files/document%20with%20spaces.pdf": "document%20with%20spaces.pdf",
+            "https://www.example.com/folder/photos/image%231.jpeg/": "image%231.jpeg",
+            "https://www.example.com/files/國際考試.pptx": "國際考試.pptx",
+            "http://www.example.com/files/çarpılan_dosya.pdf": "çarpılan_dosya.pdf",
+            "https://www.example.com/images/emoji/😍.png/": "😍.png",
+            "http://www.example.com/files/🎉.jpg": "🎉.jpg",
+            "https://www.subdomain.example.com/folder/files/π.pdf": "π.pdf",
+            "http://www.測試.我爱你/images/(͡•_̯͡•)/face.jpeg": "face.jpeg",
+            "https://www.mikuclub.cc//files/\path\\to\\file.docx": "file.docx",
+            "http://home.nginx.show//เอกสาร.pdf": "เอกสาร.pdf",
+            "http://localhost:5000/images/😍/?/xt=urn:bth:ss&t%E3%80%81": "😍",
+            "https://www.example.com/uploads/新年快乐!%E2%98%BA/index.html": "index.html",
+            "http://www.example.com/css/(•_̆_•)/style.css": "style.css",
+            "https://www.example.com/report?category=finance&year=2021": "report",
+            "https://www.example.com/files/תיקון_חריש.docx": "תיקון_חריש.docx",  # fun: reverse string
+            "https://www.example.com/images/no%2084.jpg?size=large&?type=photo": "no%2084.jpg",
+            "https://www.subdomain.example.com/gallery/美丽的风景/photo3.jpg?tags=nature&color=green": "photo3.jpg",
+            "http://www.example.com/files/Дизайнерские%20ножи.jpeg?diameter=20cm&brand=chefschoice&material=steel": "Дизайнерские%20ножи.jpeg",
+            "https://www.example.com/folder?name=客户资料&category=工程文件.p[df&year=2019": "folder",
+            "https://www.example.com/images/サンプル/sample.jpg?resolution=1080P&format=png": "sample.jpg",
+            "http://www.example.com/music/álbums/ジャズ?artist=山本道哉&year=1995": "ジャズ",
+            "https://www.example.com/upload/?filename=classic_rock_playlist&type=mp3&size=50MB": "upload"
+        }
+        for url, res in urls.items():
+            # print(get_base_file_name(url))
+            assert get_base_file_name(url) == res
+
 
 class TestNames:
     # This test ensures that `components.get_component_instance()` works correctly when instantiating from components
@@ -2673,3 +2710,4 @@ def test_constructor_args():
         "visible": False,
         "value": "Log in please",
     }
+

@@ -16,6 +16,7 @@ import threading
 import traceback
 import typing
 import warnings
+import urllib.parse
 from abc import ABC, abstractmethod
 from contextlib import contextmanager
 from io import BytesIO
@@ -969,3 +970,16 @@ def default_input_labels():
     while True:
         yield f"input {n}"
         n += 1
+
+
+def get_base_file_name(url):
+    parsed_url = urllib.parse.urlparse(url)
+    base_filepath = parsed_url.path
+
+    # remove end '/'
+    base_filepath = base_filepath.rstrip('/') if base_filepath.endswith('/') else base_filepath
+
+    # ensure return value is a standard file name (if end with a file name, else return last part as folder)
+    file_name = os.path.basename(base_filepath)
+
+    return file_name
